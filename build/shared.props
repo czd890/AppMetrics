@@ -12,7 +12,6 @@
 		<RepositoryUrl>git://github.com/AppMetrics/AppMetrics</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-
 		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
  		<PublishRepositoryUrl>true</PublishRepositoryUrl>
     	<EmbedUntrackedSources>true</EmbedUntrackedSources>
@@ -29,6 +28,12 @@
 		<PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
 
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+
+		    <MinVerMinimumMajorMinor>4.2.1</MinVerMinimumMajorMinor>
+    <MinVerDefaultPreReleasePhase></MinVerDefaultPreReleasePhase>
+    <MinVerVersion>4.2.1</MinVerVersion>
+	
 	</PropertyGroup>
 
 	<ItemGroup>
