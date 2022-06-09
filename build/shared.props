@@ -27,13 +27,9 @@
 		<SignAssembly>true</SignAssembly>
 		<PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
 
+
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 
-
-		    <MinVerMinimumMajorMinor>4.2.1</MinVerMinimumMajorMinor>
-    <MinVerDefaultPreReleasePhase></MinVerDefaultPreReleasePhase>
-    <MinVerVersion>4.2.1</MinVerVersion>
-	
 	</PropertyGroup>
 
 	<ItemGroup>
