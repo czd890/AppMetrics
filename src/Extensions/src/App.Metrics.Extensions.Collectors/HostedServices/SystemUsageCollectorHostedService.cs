@@ -6,7 +6,9 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+
 using App.Metrics.Extensions.Collectors.MetricsRegistries;
+
 using Microsoft.Extensions.Hosting;
 namespace App.Metrics.Extensions.Collectors.HostedServices
 {
@@ -20,6 +22,7 @@ namespace App.Metrics.Extensions.Collectors.HostedServices
         private TimeSpan _lastTotalProcessorTime = TimeSpan.Zero;
         private TimeSpan _lastUserProcessorTime = TimeSpan.Zero;
         private TimeSpan _lastPrivilegedProcessorTime = TimeSpan.Zero;
+        private bool disposedValue;
 
         public SystemUsageCollectorHostedService(IMetrics metrics, MetricsSystemUsageCollectorOptions options)
         {
@@ -27,12 +30,6 @@ namespace App.Metrics.Extensions.Collectors.HostedServices
             _options = options;
             _lastTimeStamp = _process.StartTime;
         }
-
-        public void Dispose()
-        {
-            _timer?.Dispose();
-        }
-
         public Task StartAsync(CancellationToken cancellationToken)
         {
             _timer = new System.Threading.Timer(CollectData, null, 1000, _options.CollectIntervalMilliseconds);
@@ -43,7 +40,7 @@ namespace App.Metrics.Extensions.Collectors.HostedServices
         private void CollectData(object state)
         {
             _process.Refresh();
-            
+
             var totalCpuTimeUsed = _process.TotalProcessorTime.TotalMilliseconds - _lastTotalProcessorTime.TotalMilliseconds;
             var privilegedCpuTimeUsed = _process.PrivilegedProcessorTime.TotalMilliseconds - _lastPrivilegedProcessorTime.TotalMilliseconds;
             var userCpuTimeUsed = _process.UserProcessorTime.TotalMilliseconds - _lastUserProcessorTime.TotalMilliseconds;
@@ -71,6 +68,27 @@ namespace App.Metrics.Extensions.Collectors.HostedServices
         {
             _timer?.Change(Timeout.Infinite, Timeout.Infinite);
             return Task.CompletedTask;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _timer?.Dispose();
+                    _timer = null;
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

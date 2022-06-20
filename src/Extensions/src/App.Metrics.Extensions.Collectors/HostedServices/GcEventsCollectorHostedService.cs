@@ -17,6 +17,7 @@ namespace App.Metrics.Extensions.Collectors.HostedServices
         private readonly MetricsGcEventsCollectorOptions _options;
         private GcEventListener _gcEventListener;
         private System.Threading.Timer _timer;
+        private bool disposedValue;
 
         public GcEventsCollectorHostedService(IMetrics metrics, MetricsGcEventsCollectorOptions options)
         {
@@ -45,10 +46,26 @@ namespace App.Metrics.Extensions.Collectors.HostedServices
             _metrics.Measure.Gauge.SetValue(GcMetricsRegistry.Gauges.LiveObjectsSize, GC.GetTotalMemory(false));
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _timer?.Dispose();
+                    _gcEventListener?.Dispose();
+                    _timer = null;
+                    _gcEventListener = null;
+                }
+
+                disposedValue = true;
+            }
+        }
+
         public void Dispose()
         {
-            _timer?.Dispose();
-            _gcEventListener?.Dispose();
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }
